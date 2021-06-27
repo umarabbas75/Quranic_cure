@@ -23,22 +23,35 @@ const AddDua = () => {
   const [categoryId, setCategoryId] = useState('')
   const [disease, setDisease] = useState('')
   const [surahName, setSurahName] = useState(undefined)
+  const [surahName1, setSurahName1] = useState(undefined)
   const [description, setDescription] = useState('')
+  const [description1, setDescription1] = useState('')
   const [count, setCount] = useState(0)
+  const [count1, setCount1] = useState(0)
   const [selectedDisease, setSelectedDisease] = useState('')
   const [surahAyats, setSurahAyats] = useState(1)
+  const [surahAyats1, setSurahAyats1] = useState(1)
   const [selectedSurah, setSelectedSurah] = useState(0)
+  const [selectedSurah1, setSelectedSurah1] = useState(0)
   const [minValue, setMinValue] = useState(0)
+  const [minValue1, setMinValue1] = useState(0)
   const [maxValue, setMaxValue] = useState(0)
+  const [maxValue1, setMaxValue1] = useState(0)
   const [categoryError, setCategoryError] = useState(false)
   const [diseaseError, setDiseaseError] = useState(false)
   const [descriptionError, setDescriptionError] = useState(false)
+  const [descriptionError1, setDescriptionError1] = useState(false)
   const [surahError, setSurahError] = useState(false)
+  const [surahError1, setSurahError1] = useState(false)
   const [countError, setCountError] = useState(false)
+  const [countError1, setCountError1] = useState(false)
+  const [minError, setMinError] = useState(false)
   const [minError1, setMinError1] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
+  const [errorMessage1, setErrorMessage1] = useState('')
+  const [moreData, setMoreData] = useState(false)
+  const [countButton, setCountButton] = useState(0)
 
-  
 
 
 
@@ -92,11 +105,18 @@ const AddDua = () => {
   useEffect(fetchCategoriesOnPageLoad, [])
 
 
-  const onSurahChange = (item) => {
-
+  const onSurahChange = (item,name) => {
+    if(name === 'surah1'){
+      setSurahName1(item.label)
+      setSelectedSurah1(item.id)
+      setSurahAyats1(item.totalAyat)
+    }
+    else {
       setSurahName(item.label)
       setSelectedSurah(item.id)
       setSurahAyats(item.totalAyat)
+    }
+   
   }
 
   const saveDuaInDb = () => {
@@ -150,19 +170,19 @@ const AddDua = () => {
     ourAyatsEnglish = JSON.stringify(ourAyatsEnglish)
     ourAyatsUrdu = JSON.stringify(ourAyatsUrdu)
 
-    console.log('==========categoryId======',categoryId)
-    console.log('==========disease======',disease)
-    console.log('==========description======',description)
-    console.log('==========selectedSurah======',selectedSurah)
-    console.log('==========minValue======',minValue)
-    console.log('==========maxValue======',maxValue)
-    console.log('==========count======',count)
-    console.log('==========ourAyatsArabic======',ourAyatsArabic)
-    console.log('==========ourAyatsEnglish======',ourAyatsEnglish)
-    console.log('==========ourAyatsUrdu======',ourAyatsUrdu)
+    console.log('==========categoryId======', categoryId)
+    console.log('==========disease======', disease)
+    console.log('==========description======', description)
+    console.log('==========selectedSurah======', selectedSurah)
+    console.log('==========minValue======', minValue)
+    console.log('==========maxValue======', maxValue)
+    console.log('==========count======', count)
+    console.log('==========ourAyatsArabic======', ourAyatsArabic)
+    console.log('==========ourAyatsEnglish======', ourAyatsEnglish)
+    console.log('==========ourAyatsUrdu======', ourAyatsUrdu)
 
 
-    if (categoryId && disease && description && selectedSurah && minValue && maxValue && count && !minError1) {
+    if (categoryId && disease && description && selectedSurah && minValue && maxValue && count && !minError) {
 
       db.transaction(function (tx) {
         tx.executeSql(
@@ -204,7 +224,7 @@ const AddDua = () => {
       if (!count) {
         setCountError(true)
       }
-      
+
 
     }
 
@@ -236,61 +256,118 @@ const AddDua = () => {
 
   const validateAyatNumber = (value) => {
 
-    console.log('==========minValue========',minValue,value,surahAyats)
-    if(parseInt(value) > surahAyats && parseInt(value) > parseInt(minValue)){
-      setMinError1(true)
+    console.log('==========minValue========', minValue, value, surahAyats)
+    if (parseInt(value) > surahAyats && parseInt(value) > parseInt(minValue)) {
+      setMinError(true)
       setErrorMessage('value cannot be greater then total ayats')
       setMaxValue(value)
     }
-    else if(parseInt(value)  < surahAyats && parseInt(value) > parseInt(minValue)){
-      console.log('==========here========',minValue,value)
+    else if (parseInt(value) < surahAyats && parseInt(value) > parseInt(minValue)) {
+      console.log('==========here========', minValue, value)
       setMaxValue(value)
-      setMinError1(false)
+      setMinError(false)
       setErrorMessage('')
     }
-    else if(parseInt(value)  < surahAyats && parseInt(value)  < parseInt(minValue)){
+    else if (parseInt(value) < surahAyats && parseInt(value) < parseInt(minValue)) {
       setMaxValue(value)
-      setMinError1(true)
+      setMinError(true)
       setErrorMessage('value cannot be less then min value')
     }
-    
-  
+
+
   }
 
   const validateMinAyat = (value) => {
-    
-    console.log('==========maxValue========',maxValue,value,surahAyats)
-    if(maxValue){
-      if(parseInt(value)  > parseInt(maxValue) && parseInt(value)  < surahAyats){
-        setMinError1(true)
+
+    console.log('==========maxValue========', maxValue, value, surahAyats)
+    if (maxValue) {
+      if (parseInt(value) > parseInt(maxValue) && parseInt(value) < surahAyats) {
+        setMinError(true)
         setErrorMessage('value cannot be greater then max value')
         setMinValue(value)
       }
-      else if(parseInt(value)  > parseInt(maxValue) && parseInt(value)  > surahAyats){
-        setMinError1(true)
+      else if (parseInt(value) > parseInt(maxValue) && parseInt(value) > surahAyats) {
+        setMinError(true)
         setErrorMessage('value cannot be greater then max total ayats')
         setMinValue(value)
       }
-      else if(parseInt(value)  < surahAyats && parseInt(value)  < parseInt(maxValue)){
+      else if (parseInt(value) < surahAyats && parseInt(value) < parseInt(maxValue)) {
         setMinValue(value)
-        setMinError1(false)
+        setMinError(false)
         setErrorMessage('')
-      } 
+      }
     }
-    else{
-      if(parseInt(value) > surahAyats){
+    else {
+      if (parseInt(value) > surahAyats) {
         setMinValue(value)
-        setMinError1(true)
+        setMinError(true)
         setErrorMessage('value cannot be greater then max total ayats')
       }
-      else{
+      else {
         setMinValue(value)
-        setMinError1(false)
+        setMinError(false)
         setErrorMessage('')
       }
-      
+
     }
+
+  }
+  const validateAyatNumber1 = (value) => {
+
+    
+    if (parseInt(value) > surahAyats1 && parseInt(value) > parseInt(minValue1)) {
+      setMinError1(true)
+      setErrorMessage1('value cannot be greater then total ayats')
+      setMaxValue1(value)
+    }
+    else if (parseInt(value) < surahAyats1 && parseInt(value) > parseInt(minValue1)) {
+      setMaxValue1(value)
+      setMinError1(false)
+      setErrorMessage1('')
+    }
+    else if (parseInt(value) < surahAyats1 && parseInt(value) < parseInt(minValue1)) {
+      setMaxValue1(value)
+      setMinError1(true)
+      setErrorMessage1('value cannot be less then min value')
+    }
+
+
+  }
+
+  const validateMinAyat1 = (value) => {
+
   
+    if (maxValue1) {
+      if (parseInt(value) > parseInt(maxValue1) && parseInt(value) < surahAyats1) {
+        setMinError1(true)
+        setErrorMessage1('value cannot be greater then max value')
+        setMinValue1(value)
+      }
+      else if (parseInt(value) > parseInt(maxValue1) && parseInt(value) > surahAyats1) {
+        setMinError1(true)
+        setErrorMessage1('value cannot be greater then max total ayats')
+        setMinValue1(value)
+      }
+      else if (parseInt(value) < surahAyats1 && parseInt(value) < parseInt(maxValue1)) {
+        setMinValue1(value)
+        setMinError1(false)
+        setErrorMessage1('')
+      }
+    }
+    else {
+      if (parseInt(value) > surahAyats1) {
+        setMinValue1(value)
+        setMinError1(true)
+        setErrorMessage1('value cannot be greater then max total ayats')
+      }
+      else {
+        setMinValue1(value)
+        setMinError1(false)
+        setErrorMessage1('')
+      }
+
+    }
+
   }
 
   return (
@@ -300,7 +377,7 @@ const AddDua = () => {
         <TouchableWithoutFeedback >
           <View style={{ flex: 1, padding: 16 }}>
             <View
-              style={{flex: 1,justifyContent: 'center', }}>
+              style={{ flex: 1, justifyContent: 'center', }}>
 
 
 
@@ -324,7 +401,7 @@ const AddDua = () => {
 
 
               {/* disease input field */}
-              <View style={[styles.label,{marginTop : 25}]}>
+              <View style={[styles.label, { marginTop: 25 }]}>
                 <Text style={styles.labelText}>
                   Disease
                 </Text>
@@ -345,7 +422,7 @@ const AddDua = () => {
 
 
               {/* description input field */}
-              <View style={[styles.label,{marginTop : 25}]}>
+              <View style={[styles.label, { marginTop: 25 }]}>
                 <Text style={styles.labelText}>
                   Description
                 </Text>
@@ -364,8 +441,8 @@ const AddDua = () => {
                 </View>
               </View>
 
-               {/* surah input field */}
-              <View style={[styles.label,{marginTop : 25}]}>
+              {/* surah input field */}
+              <View style={[styles.label, { marginTop: 25 }]}>
                 <Text style={styles.labelText}>
                   Surah
                 </Text>
@@ -373,7 +450,7 @@ const AddDua = () => {
                   <SearchComponent
                     data={surah}
                     label={'label'}
-                    style={{borderColor : '#7a42f4',width: 200,}}
+                    style={{ borderColor: '#7a42f4', width: 200, }}
                     onItemSelect={(text) => {
                       setSurahError(false)
                       onSurahChange(text)
@@ -395,7 +472,7 @@ const AddDua = () => {
                     <View>
                       <TextInput
                         keyboardType="numeric"
-                        style={[styles.number,{marginRight : 10}]}
+                        style={[styles.number, { marginRight: 10 }]}
                         onChangeText={(value) => { validateMinAyat(value) }}
                         placeholder="from"
                         placeholderTextColor="gray"
@@ -417,18 +494,18 @@ const AddDua = () => {
 
 
                   </View>
-                
-               
+
+
                 </View>
-                <View style={{marginLeft : 160,marginTop : 10}}>
-                 {minError1 && <Text style={styles.error}>{errorMessage}</Text>}
-                 
+                <View style={{ marginLeft: 160, marginTop: 10 }}>
+                  {minError && <Text style={styles.error}>{errorMessage}</Text>}
+
                 </View>
               </View>
 
 
-                {/* count input field */}
-              <View style={[styles.label,{marginTop : 25}]}>
+              {/* count input field */}
+              <View style={[styles.label, { marginTop: 25 }]}>
                 <Text
                   style={styles.count}>
                   Count
@@ -450,6 +527,136 @@ const AddDua = () => {
                   {countError && <Text style={styles.error}>Please enter count!</Text>}
                 </View>
               </View>
+
+
+              {
+                moreData && countButton >= 1 &&
+                <>
+
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={styles.dua2} >
+                      Add Second Dua
+                    </Text>
+                  </View>
+
+
+                   {/* surah 1 input field */}
+                  <View style={styles.label2}>
+                    <Text
+                      style={styles.label2Text}>
+                      Surah 2
+                    </Text>
+                    <View>
+                      <SearchComponent
+                        data={surah}
+                        label={'label'}
+                        style={{ borderColor: '#7a42f4', width: 200, }}
+                        onItemSelect={(text) => {
+                          setSurahError1(false)
+                          onSurahChange(text, 'surah1')
+                        }}
+                      />
+                      {surahError1 && <Text style={styles.error}>Please select surah!</Text>}
+                    </View>
+                  </View>
+                  
+                  {/* ayat 1 input field */}
+                  <View>
+                    <View style={styles.label}>
+                      <Text
+                        style={styles.label2Text}>
+                        Ayats 2
+                      </Text>
+                      <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                        <View>
+                          <TextInput
+                            keyboardType="numeric"
+                            style={styles.number}
+                            onChangeText={(value) => { validateMinAyat1(value) }}
+                            placeholder="from"
+                            placeholderTextColor="gray"
+                          />
+                          <Text style={{ color: 'gray', fontSize: 11 }}> MinValue : 1</Text>
+                        </View>
+                        <View>
+                          <TextInput
+                            keyboardType="numeric"
+                            style={styles.number}
+                            onChangeText={(value) => { validateAyatNumber1(value) }}
+                            placeholder="to"
+                            placeholderTextColor="gray"
+
+                          />
+                          <Text style={{ color: 'gray', fontSize: 11 }}> MaxValue :  {surahAyats1}</Text>
+                        </View>
+                      </View>
+                    </View>
+                    <View style={{ marginLeft: 130 }}>
+                      {minError1 && <Text style={styles.error}>{errorMessage1}</Text>}
+                    </View>
+                  </View>
+
+
+
+                  {/* desc 1 input field */}
+                  <View style={styles.label2}>
+                    <Text
+                      style={styles.label2Text}>
+                      Description 2
+                    </Text>
+                    <View>
+                      <TextInput
+                        style={styles.input}
+                        underlineColorAndroid="transparent"
+                        autoCapitalize="none"
+                        value={description1}
+                        onChangeText={(item) => {
+                          setDescriptionError1(false)
+                          setDescription1(item)
+                        }}
+                      />
+                      {descriptionError1 && <Text style={styles.error}>Please enter description!</Text>}
+                    </View>
+                  </View>
+
+
+                   {/* count 1 input field */}
+                  <View style={styles.label2}>
+                    <Text
+                      style={styles.label2Text}>
+                      Count 2
+                    </Text>
+                    <View>
+                      <TextInput
+                        keyboardType="numeric"
+                        style={styles.input}
+                        underlineColorAndroid="transparent"
+                        placeholder="   Enter Count Numbers "
+                        placeholderTextColor="gray"
+                        autoCapitalize="none"
+                        value={count1}
+                        onChangeText={(item) => {
+                          setCountError1(false)
+                          setCount1(item)
+                        }}
+                      />
+                      {countError1 && <Text style={styles.error}>Please enter count!</Text>}
+                    </View>
+                  </View>
+                </>
+              }
+
+
+              <TouchableOpacity >
+                <Text style={styles.moreDua}
+                  onPress={() => {
+                    setCountButton(countButton + 1)
+                    setMoreData(true)
+                  }}
+                >
+                  Add More Dua
+                </Text>
+              </TouchableOpacity>
 
               <TouchableOpacity
                 style={styles.submitButton}
@@ -500,38 +707,58 @@ const styles = StyleSheet.create({
     width: 300,
     textAlign: 'center'
   },
-  label : { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between' },
-  labelText : {
+  label: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  labelText: {
     fontSize: 16,
     alignSelf: 'flex-start',
     marginRight: 20,
     marginTop: 10
   },
-  RNPickerContainer : { 
-    borderWidth: 1, 
-    height: 45, 
-    borderColor: '#7a42f4', 
-    width: 200, 
-    borderRadius: 5, 
-    marginBottom: 10 
+  RNPickerContainer: {
+    borderWidth: 1,
+    height: 45,
+    borderColor: '#7a42f4',
+    width: 200,
+    borderRadius: 5,
+    marginBottom: 10
   },
-    number : {
-      height: 45,
-      padding: 10,
-      width: 95,
-      borderColor: '#7a42f4',
-      borderWidth: 1,
-      borderRadius: 5,
-    },
-    count : {
-      fontSize: 16,
-      alignSelf: 'flex-start',
-      marginRight: 20,
-      marginTop: 5
-    },
-    error : { color: 'red', fontSize: 11 }
+  number: {
+    height: 45,
+    padding: 10,
+    width: 95,
+    borderColor: '#7a42f4',
+    borderWidth: 1,
+    borderRadius: 5,
+  },
+  count: {
+    fontSize: 16,
+    alignSelf: 'flex-start',
+    marginRight: 20,
+    marginTop: 5
+  },
+  error: { color: 'red', fontSize: 11 },
+
+  dua2: { fontSize: 28, alignItems: 'center', justifyContent: 'center', color: '#7a42f4', paddingTop: 10, textDecorationLine: 'underline' },
+  label2: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: 15 },
+
+  label2Text: {
+    fontSize: 16,
+    alignSelf: 'flex-start',
+    marginRight: 30,
+    marginTop: 5
+  },
+  moreDua : {
+    alignSelf: 'flex-end', marginTop: 10, justifyContent: 'center',
+    color: '#7a42f4', alignItems: 'center', height: 28, textDecorationLine: 'underline',
+    padding: 4,
+    width: 100,
+    borderColor: '#7a42f4',
+    borderWidth: 2,
+    borderRadius: 5,
+  }
 
 })
