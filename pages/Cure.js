@@ -6,7 +6,7 @@ import {
   Button, View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Image, Alert
 } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'QURANICCUREAPP.db' });
+var db = openDatabase({ name: 'QURANICCUREAPP1.db' });
 
 const FirstPage = ({ navigation }) => {
   let [userData, setUserData] = useState({});

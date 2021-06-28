@@ -10,7 +10,7 @@ import {
 } from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'QURANICCUREAPP.db' });
+var db = openDatabase({ name: 'QURANICCUREAPP1.db' });
 
 const FirstPage = ({ navigation }) => {
 

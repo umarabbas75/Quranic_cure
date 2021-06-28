@@ -10,7 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import AudioPage from './AudioPage'
 import RNPickerSelect from 'react-native-picker-select';
 
-var db = openDatabase({ name: 'QURANICCUREAPP.db' });
+var db = openDatabase({ name: 'QURANICCUREAPP1.db' });
 let sound = ''
 
 const DetailsScreen = ({ navigation, route }) => {
