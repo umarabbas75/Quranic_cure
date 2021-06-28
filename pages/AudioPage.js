@@ -19,7 +19,7 @@ import Sound from 'react-native-sound';
 import surahData from '../data/surah1'
 const App = ({ audioList }) => {
 
- // console.log('===========audioList=======',audioList)
+ console.log('===========audioList=======',audioList)
 
   const [audioIndex, selectedIndex] = useState('')
 

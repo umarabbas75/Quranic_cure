@@ -20,16 +20,20 @@ const DetailsScreen = ({ navigation, route }) => {
   const [myDiseases, setMyDiseases] = useState([])
   const [pageData, setPageData] = useState('')
   const [count, setCount] = useState(0)
+  const [count1, setCount1] = useState(0)
+  const [count2, setCount2] = useState(0)
   const [audioCount, setAudiCount] = useState(0)
   const [showMessage, setShowMessage] = useState(false)
+  const [showMessage1, setShowMessage1] = useState(false)
+  const [showMessage2, setShowMessage2] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const { cat_id } = route.params
   const [audio, setAudio] = useState([])
   const [showNextDua, setShowNextDua] = useState(false)
   const [ids, setIds] = useState([])
 
+  
 
- 
   // [{ index: 1, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001001.mp3' }, { id: 2, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001002.mp3' }, { id: 3, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001003.mp3' }]
   const playAgain = () => {
     if (audioCount !== 0) {
@@ -162,16 +166,16 @@ const DetailsScreen = ({ navigation, route }) => {
   useEffect(fetchDiseasesOnPageLoad, [cat_id])
 
 
-  const addLeadingZero = (num,size) =>{
-        let s = num+""
-        while(s.length < size){
-          s= '0'+s
-        }
-        return s
+  const addLeadingZero = (num, size) => {
+    let s = num + ""
+    while (s.length < size) {
+      s = '0' + s
+    }
+    return s
   }
 
   const fetchDataFromDb = (id) => {
- 
+
     myDiseases && myDiseases.length > 0 && myDiseases.forEach(item => {
       if (item.value == id) {
         setIds(item.ids)
@@ -187,19 +191,39 @@ const DetailsScreen = ({ navigation, route }) => {
           var len = results.rows.length;
 
           const obj = results.rows.item(0)
-          console.log('========setPageDatasetPageDatasetPageDatasetPageData====================================================================',obj)
+
           setCount(results.rows.item(0).count)
+          setCount1(results.rows.item(0).count1)
+          setCount2(results.rows.item(0).count2)
           setPageData(obj)
-         
+
           let arrayLength = obj.maxValue - obj.minValue
           let array = []
           let index = 1
           for (let i = parseInt(obj.minValue); i < parseInt(obj.maxValue) + 1; i++) {
-            
-            let surah = addLeadingZero(parseInt(obj.surah),3)
-            let ayat = addLeadingZero(i,3)
 
-        
+            let surah = addLeadingZero(parseInt(obj.surah), 3)
+            let ayat = addLeadingZero(i, 3)
+
+
+            array.push({ label: `http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/${(surah)}${ayat}.mp3`, index: index, surah: parseInt(obj.surah), min: obj.minValue, max: obj.maxValue })
+            index++
+          }
+          for (let i = parseInt(obj.minValue1); i < parseInt(obj.maxValue1) + 1; i++) {
+
+            let surah = addLeadingZero(parseInt(obj.surah), 3)
+            let ayat = addLeadingZero(i, 3)
+
+
+            array.push({ label: `http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/${(surah)}${ayat}.mp3`, index: index, surah: parseInt(obj.surah), min: obj.minValue, max: obj.maxValue })
+            index++
+          }
+          for (let i = parseInt(obj.minValue2); i < parseInt(obj.maxValue2) + 1; i++) {
+
+            let surah = addLeadingZero(parseInt(obj.surah), 3)
+            let ayat = addLeadingZero(i, 3)
+
+
             array.push({ label: `http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/${(surah)}${ayat}.mp3`, index: index, surah: parseInt(obj.surah), min: obj.minValue, max: obj.maxValue })
             index++
           }
@@ -217,32 +241,6 @@ const DetailsScreen = ({ navigation, route }) => {
     });
   }
 
-  const diseaseList = () => {
-
-    if (selectedDiseases && selectedDiseases.length > 0) {
-      return selectedDiseases && selectedDiseases.map((item) => {
-
-        return (
-          <View key={item.dua_id} style={{ margin: 5 }}>
-
-            <TouchableOpacity
-              style={styles.disease}
-
-            >
-              <Text onPress={() => {
-
-                fetchDataFromDb(item.dua_id)
-              }}>{item.disease}</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      });
-    }
-    else {
-      return <View><Text>no data found!</Text></View>
-    }
-
-  }
 
   const renderArabicAyats = () => {
 
@@ -254,18 +252,47 @@ const DetailsScreen = ({ navigation, route }) => {
             <Text > {item.content}</Text>
             <Text style={{ color: 'green' }} > {item.verse_number}</Text>
           </Text>
-
-
         })
-
       }
       else {
         return <Text > Please select disease from abovesd</Text>
       }
     }
+  }
 
+  const renderArabicAyats1 = () => {
 
+    if (pageData && pageData.ayatsArabic1) {
+      const arabicAyats = JSON.parse(pageData && pageData.ayatsArabic1)
+      if (arabicAyats && arabicAyats.length > 0) {
+        return arabicAyats && arabicAyats.map(item => {
+          return <Text>
+            <Text > {item.content}</Text>
+            <Text style={{ color: 'green' }} > {item.verse_number}</Text>
+          </Text>
+        })
+      }
+      else {
+        return <Text > </Text>
+      }
+    }
+  }
+  const renderArabicAyats2 = () => {
 
+    if (pageData && pageData.ayatsArabic2) {
+      const arabicAyats = JSON.parse(pageData && pageData.ayatsArabic2)
+      if (arabicAyats && arabicAyats.length > 0) {
+        return arabicAyats && arabicAyats.map(item => {
+          return <Text>
+            <Text > {item.content}</Text>
+            <Text style={{ color: 'green' }} > {item.verse_number}</Text>
+          </Text>
+        })
+      }
+      else {
+        return <Text ></Text>
+      }
+    }
   }
 
   const renderEnglishAyats = () => {
@@ -282,7 +309,53 @@ const DetailsScreen = ({ navigation, route }) => {
 
       }
       else {
-        return ''
+        return <Text></Text>
+      }
+    }
+    else {
+      return <Text></Text>
+    }
+
+
+  }
+  const renderEnglishAyats1 = () => {
+
+    if (pageData && pageData.ayatsEnglish1) {
+      const englishAyats = JSON.parse(pageData && pageData.ayatsEnglish1)
+      if (englishAyats && englishAyats.length > 0) {
+        return englishAyats && englishAyats.map(item => {
+          return <Text>
+            <Text > {item.content}</Text>
+            <Text style={{ color: 'green' }} > {item.verse_number}</Text>
+          </Text>
+        })
+
+      }
+      else {
+        return <Text></Text>
+      }
+    }
+    else {
+      return <Text></Text>
+    }
+
+
+  }
+  const renderEnglishAyats2 = () => {
+
+    if (pageData && pageData.ayatsEnglish2) {
+      const englishAyats = JSON.parse(pageData && pageData.ayatsEnglish2)
+      if (englishAyats && englishAyats.length > 0) {
+        return englishAyats && englishAyats.map(item => {
+          return <Text>
+            <Text > {item.content}</Text>
+            <Text style={{ color: 'green' }} > {item.verse_number}</Text>
+          </Text>
+        })
+
+      }
+      else {
+        return <Text></Text>
       }
     }
     else {
@@ -317,10 +390,76 @@ const DetailsScreen = ({ navigation, route }) => {
 
 
   }
+  const rendeUrduAyats1 = () => {
+
+    if (pageData && pageData.ayatsUrdu1) {
+      const urduAyats = JSON.parse(pageData && pageData.ayatsUrdu1)
+      if (urduAyats && urduAyats.length > 0) {
+        return urduAyats && urduAyats.map(item => {
+          return <Text>
+            <Text > {item.text}</Text>
+            <Text style={{ color: 'green' }} > {item.aya}</Text>
+          </Text>
+
+
+        })
+
+      }
+      else {
+        return <Text></Text>
+      }
+    }
+    else {
+      return <Text></Text>
+    }
+
+
+  }
+  const rendeUrduAyats2 = () => {
+
+    if (pageData && pageData.ayatsUrdu2) {
+      const urduAyats = JSON.parse(pageData && pageData.ayatsUrdu2)
+      if (urduAyats && urduAyats.length > 0) {
+        return urduAyats && urduAyats.map(item => {
+          return <Text>
+            <Text > {item.text}</Text>
+            <Text style={{ color: 'green' }} > {item.aya}</Text>
+          </Text>
+
+
+        })
+
+      }
+      else {
+        return <Text></Text>
+      }
+    }
+    else {
+      return <Text></Text>
+    }
+
+
+  }
 
   const rendeDesc = () => {
     if (pageData) {
       return <Text>{pageData.description}</Text>
+    }
+    else {
+      return <Text></Text>
+    }
+  }
+  const rendeDesc1 = () => {
+    if (pageData && pageData.description1) {
+      return <Text>{pageData.description1}</Text>
+    }
+    else {
+      return <Text></Text>
+    }
+  }
+  const rendeDesc2 = () => {
+    if (pageData && pageData.description2) {
+      return <Text>{pageData.description2}</Text>
     }
     else {
       return <Text></Text>
@@ -338,8 +477,28 @@ const DetailsScreen = ({ navigation, route }) => {
     }
 
   }
+  const decrementCounter1 = () => {
+    if (count1 < 1) {
+      setShowMessage1(true)
+    }
+    else {
+      setCount1(count1 - 1)
+      setShowMessage1(false)
+    }
 
-  
+  }
+  const decrementCounter2 = () => {
+    if (count2 < 1) {
+      setShowMessage2(true)
+    }
+    else {
+      setCount2(count2 - 1)
+      setShowMessage2(false)
+    }
+
+  }
+
+
 
   const startPlaying = () => {
 
@@ -405,18 +564,8 @@ const DetailsScreen = ({ navigation, route }) => {
 
 
         <View style={{ display: 'flex', paddingHorizontal: 0 }}>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10, borderBottomColor: '#ddd', borderBottomWidth: 1 }}>
-            {/* {diseaseList()} */}
-            {/* {selectedDiseases && selectedDiseases.map(item => {
-            return <TouchableOpacity
-              style={styles.disease}
-              onPress={()=>{fetchDataFromDb(item.dua_id)}}
-            >
-              <Text>{item.disease}</Text>
-            </TouchableOpacity>
-          })} */}
 
-          </View>
+          {/* show first dua in arabic urdu and english */}
           <ScrollView nestedScrollEnabled={true} style={{ height: 350, borderWidth: 1, borderColor: '#ddd', borderRadius: 5, marginBottom: 15, borderColor: '#7a42f4', }}>
             <View style={{ paddingHorizontal: 10, }} >
 
@@ -424,7 +573,7 @@ const DetailsScreen = ({ navigation, route }) => {
               </View> :
                 <View style={{ height: 300, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
 
-                  <Text style={{alignItems:'center'}}>Please Select Disease From Above</Text>
+                  <Text style={{ alignItems: 'center' }}>Please Select Disease From Above</Text>
                 </View>
               }
             </View>
@@ -440,8 +589,37 @@ const DetailsScreen = ({ navigation, route }) => {
             </View>
 
 
+            {/* show second dua in arabic urdu and english */}
+            {(pageData && pageData.ayatsArabic1.length > 0) ? <View><Text>DUA 2</Text></View> : <View><Text></Text></View>}
+            <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{renderArabicAyats1()}
+            </View>
+
+
+            <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{rendeUrduAyats1()}
+            </View>
+
+
+            <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{renderEnglishAyats1()}
+            </View>
+
+
+            {/* show third dua in arabic urdu and english */}
+            {(pageData && pageData.ayatsArabic2.length > 0) ? <View><Text>DUA 3</Text></View> : <View><Text></Text></View>}
+            <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{renderArabicAyats2()}
+            </View>
+
+
+            <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{rendeUrduAyats2()}
+            </View>
+
+
+            <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{renderEnglishAyats2()}
+            </View>
+
+
           </ScrollView>
 
+          {/* next dua functionality */}
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             {(ids && showNextDua) && ids.map((item, index) => {
 
@@ -459,11 +637,31 @@ const DetailsScreen = ({ navigation, route }) => {
             })}
           </View>
 
+
+          {/* render desc functionality */}
           <View style={{ paddingHorizontal: 10, marginTop: 1 }} >
             <Text style={{ fontSize: 22, }}>Description</Text>
             <View style={{ fontSize: 18, marginTop: 5, alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', justifyContent: 'center', }}>{rendeDesc()}</View>
           </View>
 
+          {/* render desc1 functionality */}
+          <View style={{ paddingHorizontal: 10, marginTop: 1 }} >
+
+            {(pageData && pageData.description1) ? <View><Text style={{ fontSize: 22, }}>Description1</Text></View> : <View><Text></Text></View>}
+
+            <View style={{ fontSize: 18, marginTop: 5, alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', justifyContent: 'center', }}>{rendeDesc1()}</View>
+          </View>
+
+          {/* render desc2 functionality */}
+          <View style={{ paddingHorizontal: 10, marginTop: 1 }} >
+
+            {(pageData && pageData.description2) ? <View><Text style={{ fontSize: 22, }}>Description2</Text></View> : <View><Text></Text></View>}
+
+            <View style={{ fontSize: 18, marginTop: 5, alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', justifyContent: 'center', }}>{rendeDesc2()}</View>
+          </View>
+
+
+          {/* count functionality */}
           <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
 
             <TouchableOpacity
@@ -473,34 +671,59 @@ const DetailsScreen = ({ navigation, route }) => {
               <Text style={styles.submitButtonText}> Count </Text>
             </TouchableOpacity>
             <Text>{count}</Text>
-            
+
           </View>
 
           <View>
             <Text style={{ color: 'red', fontSize: 12 }}>{showMessage && 'Your count has completed!'}</Text>
           </View>
 
-          <AudioPage audioList={audio} />
-          {/* <View >
+
+           {/* count1 functionality */}
+         {pageData && parseFloat(pageData.count1)  ? 
+         <>
+         <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
+
             <TouchableOpacity
-              style={
-                {
-                  backgroundColor: '#7a52f4',
-                  padding: 10,
-                  margin: 15,
-                  marginTop: 1,
-                  height: 40,
-                  width: 100, borderRadius: 10
-                }
-              }
-              onPress={() => { onPlay() }}
+              style={styles.submitButton}
+              onPress={() => { decrementCounter1() }}
             >
-              <Text style={styles.submitButtonText}> Play </Text>
+              <Text style={styles.submitButtonText}> Count1 </Text>
             </TouchableOpacity>
-            </View> */}
+            <Text>{count1}</Text>
+
+          </View> 
+
+          <View>
+            <Text style={{ color: 'red', fontSize: 12 }}>{showMessage1 && 'Your count has completed!'}</Text>
+          </View>
+          </>
+          : <View><Text></Text></View>}
+
+
+           {/* count2 functionality */}
+         {pageData &&  parseFloat(pageData.count2)  ? 
+         <>
+         <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
+
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={() => { decrementCounter2() }}
+            >
+              <Text style={styles.submitButtonText}> Count2 </Text>
+            </TouchableOpacity>
+            <Text>{count2}</Text>
+
+          </View> 
+
+          <View>
+            <Text style={{ color: 'red', fontSize: 12 }}>{showMessage2 && 'Your count has completed!'}</Text>
+          </View>
+          </>
+          : <View><Text></Text></View>}
+
+          <AudioPage audioList={audio} />
         </View>
-
-
       </ScrollView>
     </SafeAreaView>
 
