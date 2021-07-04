@@ -19,7 +19,7 @@ import Sound from 'react-native-sound';
 import surahData from '../data/surah1'
 const App = ({ audioList }) => {
 
- console.log('===========audioList=======',audioList)
+
 
   const [audioIndex, selectedIndex] = useState('')
 
@@ -105,7 +105,7 @@ const App = ({ audioList }) => {
     if(index == 0){
       return (
         <View style={styles.feature} key={index}>
-          <Text style={styles.textStyle}> {renderSurah(item.surah)}</Text>
+          {/* <Text style={styles.textStyle}> {renderSurah(item.surah)}</Text> */}
           <TouchableOpacity onPress={() => playSound(item, index,array)}>
             <Text style={styles.buttonPlay}>Play</Text>
           </TouchableOpacity>
@@ -140,8 +140,9 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    
     padding: 10,
+    alignSelf : 'flex-end'
   },
   titleText: {
     fontSize: 22,
@@ -178,7 +179,6 @@ const styles = StyleSheet.create({
     marginTop: 7,
     alignSelf: 'stretch',
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: 'rgb(180,180,180)',
+    
   },
 });

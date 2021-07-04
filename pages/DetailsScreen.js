@@ -20,6 +20,8 @@ const DetailsScreen = ({ navigation, route }) => {
   const [myDiseases, setMyDiseases] = useState([])
   const [pageData, setPageData] = useState('')
   const [count, setCount] = useState(0)
+  const [countValue, setCountValue] = useState(0)
+  const [countNew, setCountNew] = useState(0)
   const [count1, setCount1] = useState(0)
   const [count2, setCount2] = useState(0)
   const [audioCount, setAudiCount] = useState(0)
@@ -32,8 +34,8 @@ const DetailsScreen = ({ navigation, route }) => {
   const [showNextDua, setShowNextDua] = useState(false)
   const [ids, setIds] = useState([])
 
-  
 
+  console.log('========selectedDiseases=====', selectedDiseases)
   // [{ index: 1, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001001.mp3' }, { id: 2, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001002.mp3' }, { id: 3, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001003.mp3' }]
   const playAgain = () => {
     if (audioCount !== 0) {
@@ -61,101 +63,106 @@ const DetailsScreen = ({ navigation, route }) => {
             rows.push(row)
             newRow.push(row)
           }
-          setSelectedDiseases(rows)
-
-          let onlyDisease = rows.map(item => item.disease);
-
-          let repeatedElement = []
-          let nonRepeated = []
-          let nonReapeatedIndex = []
-          onlyDisease.forEach((item, index) => {
-            if (onlyDisease.indexOf(item) != index) {
-              repeatedElement.push(item)
-
-            }
-            else {
-              nonRepeated.push(item)
-              nonReapeatedIndex.push(index)
-            }
+          data = rows.map((item) => {
+            return { ...item, value: item.dua_id, label: item.disease }
           })
 
 
+          setSelectedDiseases(data)
 
-          let newArray = []
+          // let onlyDisease = rows.map(item => item.disease);
 
-          rows.forEach((item, index) => {
-            nonReapeatedIndex.forEach(Item => {
-              if (index === Item) {
-                newArray.push(item)
-              }
-            })
-          })
+          // let repeatedElement = []
+          // let nonRepeated = []
+          // let nonReapeatedIndex = []
+          // onlyDisease.forEach((item, index) => {
+          //   if (onlyDisease.indexOf(item) != index) {
+          //     repeatedElement.push(item)
 
-
-
-          newArray.forEach(item => {
-            item.label = item.disease
-            item.value = item.dua_id
-          })
-
-          newRow.forEach((item) => {
-            item.label = item.disease
-            item.value = item.dua_id
-
-          })
+          //   }
+          //   else {
+          //     nonRepeated.push(item)
+          //     nonReapeatedIndex.push(index)
+          //   }
+          // })
 
 
 
-          let superFinal = []
+          // let newArray = []
 
-          newArray.forEach(item => {
-            rows.forEach(Item => {
-              if (item.disease === Item.disease) {
-
-
-                superFinal.push(item.disease)
-              }
-            })
-          })
+          // rows.forEach((item, index) => {
+          //   nonReapeatedIndex.forEach(Item => {
+          //     if (index === Item) {
+          //       newArray.push(item)
+          //     }
+          //   })
+          // })
 
 
 
-          let grandSuperFinal = []
+          // newArray.forEach(item => {
+          //   item.label = item.disease
+          //   item.value = item.dua_id
+          // })
 
-          newArray.forEach(item => {
-            let count = 0;
-            superFinal.forEach(Item => {
+          // newRow.forEach((item) => {
+          //   item.label = item.disease
+          //   item.value = item.dua_id
 
-              if (item.disease === Item) {
-
-                count = count + 1
-
-              }
-            })
-            item.count = count
-            grandSuperFinal.push(item)
-
-          })
+          // })
 
 
 
-          grandSuperFinal.forEach(item => {
-            item.label = item.label + "(" + item.count + ")"
-          })
-          let final = []
-          grandSuperFinal.forEach(item => {
-            let ids = []
-            rows.forEach(Item => {
-              if (item.disease === Item.disease) {
-                ids.push(Item.value)
-              }
-            })
-            item.ids = ids
-            final.push(item)
-          })
+          // let superFinal = []
+
+          // newArray.forEach(item => {
+          //   rows.forEach(Item => {
+          //     if (item.disease === Item.disease) {
 
 
-          setMyDiseases(grandSuperFinal)
+          //       superFinal.push(item.disease)
+          //     }
+          //   })
+          // })
+
+
+
+          // let grandSuperFinal = []
+
+          // newArray.forEach(item => {
+          //   let count = 0;
+          //   superFinal.forEach(Item => {
+
+          //     if (item.disease === Item) {
+
+          //       count = count + 1
+
+          //     }
+          //   })
+          //   item.count = count
+          //   grandSuperFinal.push(item)
+
+          // })
+
+
+
+          // grandSuperFinal.forEach(item => {
+          //   item.label = item.label + "(" + item.count + ")"
+          // })
+          // let final = []
+          // grandSuperFinal.forEach(item => {
+          //   let ids = []
+          //   rows.forEach(Item => {
+          //     if (item.disease === Item.disease) {
+          //       ids.push(Item.value)
+          //     }
+          //   })
+          //   item.ids = ids
+          //   final.push(item)
+          // })
+
+
+          // setMyDiseases(selectedDiseases)
 
 
         }
@@ -193,6 +200,7 @@ const DetailsScreen = ({ navigation, route }) => {
           const obj = results.rows.item(0)
 
           setCount(results.rows.item(0).count)
+          setCountValue(results.rows.item(0).count)
           setCount1(results.rows.item(0).count1)
           setCount2(results.rows.item(0).count2)
           setPageData(obj)
@@ -472,6 +480,7 @@ const DetailsScreen = ({ navigation, route }) => {
       setShowMessage(true)
     }
     else {
+      setCountNew(countNew + 1)
       setCount(count - 1)
       setShowMessage(false)
     }
@@ -498,7 +507,18 @@ const DetailsScreen = ({ navigation, route }) => {
 
   }
 
+  const incrementCounter = () => {
+    if (countNew > countValue - 1) {
+      setShowMessage(true)
+      
+    }
+    else {
+      setCountNew(countNew + 1)
+      setCount(count-1)
+      setShowMessage(false)
+    }
 
+  }
 
   const startPlaying = () => {
 
@@ -534,6 +554,42 @@ const DetailsScreen = ({ navigation, route }) => {
     }
   }
 
+  const renderDua2 = () => {
+    if (pageData) {
+      let ayatsArabic = JSON.parse(pageData && pageData.ayatsArabic1)
+
+      console.log('=======ayatsArabic======', pageData && pageData.ayatsArabic1)
+
+      if (pageData && ayatsArabic.length > 0) {
+        return <View><Text>DUA 2</Text></View>
+      }
+      else {
+        return <View><Text></Text></View>
+      }
+    }
+    else {
+      return <View><Text></Text></View>
+    }
+
+  }
+  const renderDua3 = () => {
+
+    if (pageData) {
+      let ayatsArabic = JSON.parse(pageData.ayatsArabic2)
+      if (pageData && ayatsArabic.length > 0) {
+        return <View><Text>DUA 3</Text></View>
+      }
+      else {
+        return <View><Text></Text></View>
+      }
+    }
+    else {
+      return <View><Text></Text></View>
+    }
+
+  }
+
+
 
 
   return (
@@ -558,7 +614,7 @@ const DetailsScreen = ({ navigation, route }) => {
             }}
 
             onValueChange={(value) => fetchDataFromDb(value)}
-            items={myDiseases}
+            items={selectedDiseases}
           />
         </View>
 
@@ -590,7 +646,8 @@ const DetailsScreen = ({ navigation, route }) => {
 
 
             {/* show second dua in arabic urdu and english */}
-            {(pageData && pageData.ayatsArabic1.length > 0) ? <View><Text>DUA 2</Text></View> : <View><Text></Text></View>}
+            {renderDua2()}
+            {/* {(pageData && pageData.ayatsArabic1.length > 0) ? <View><Text>DUA 2</Text></View> : <View><Text></Text></View>} */}
             <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{renderArabicAyats1()}
             </View>
 
@@ -604,7 +661,7 @@ const DetailsScreen = ({ navigation, route }) => {
 
 
             {/* show third dua in arabic urdu and english */}
-            {(pageData && pageData.ayatsArabic2.length > 0) ? <View><Text>DUA 3</Text></View> : <View><Text></Text></View>}
+            {renderDua3()}
             <View style={{ alignItems: 'center', flexDirection: 'row-reverse', flexWrap: 'wrap', backgroundColor: '#ddd', marginTop: 20 }}>{renderArabicAyats2()}
             </View>
 
@@ -618,6 +675,10 @@ const DetailsScreen = ({ navigation, route }) => {
 
 
           </ScrollView>
+
+
+
+
 
           {/* next dua functionality */}
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -662,67 +723,90 @@ const DetailsScreen = ({ navigation, route }) => {
 
 
           {/* count functionality */}
-          <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
 
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={() => { decrementCounter() }}
-            >
-              <Text style={styles.submitButtonText}> Count </Text>
-            </TouchableOpacity>
-            <Text>{count}</Text>
+              <View>
+                <View style={{flexDirection : 'row',alignItems : 'center'}}>
+                  <TouchableOpacity
+                    style={styles.submitButton}
+                    onPress={() => { decrementCounter() }}
+                  >
+                    <Text style={styles.submitButtonText}> Count </Text>
+                  </TouchableOpacity>
+                  <Text>{count}</Text>
+                </View>
+
+                <View style={{flexDirection : 'row',alignItems : 'center'}}>
+                  <TouchableOpacity
+                    style={styles.submitButton}
+                    onPress={() => { incrementCounter() }}
+                  >
+                    <Text style={styles.submitButtonText}> Increment </Text>
+                  </TouchableOpacity>
+                  <Text>{countNew}</Text>
+                </View>
+              </View>
+
+
+
+
+            </View>
+
+            <AudioPage audioList={audio} />
 
           </View>
+
 
           <View>
             <Text style={{ color: 'red', fontSize: 12 }}>{showMessage && 'Your count has completed!'}</Text>
           </View>
 
 
-           {/* count1 functionality */}
-         {pageData && parseFloat(pageData.count1)  ? 
-         <>
-         <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
+          {/* count1 functionality */}
+          {pageData && parseFloat(pageData.count1) ?
+            <>
+              <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
 
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={() => { decrementCounter1() }}
-            >
-              <Text style={styles.submitButtonText}> Count1 </Text>
-            </TouchableOpacity>
-            <Text>{count1}</Text>
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={() => { decrementCounter1() }}
+                >
+                  <Text style={styles.submitButtonText}> Count1 </Text>
+                </TouchableOpacity>
+                <Text>{count1}</Text>
 
-          </View> 
+              </View>
 
-          <View>
-            <Text style={{ color: 'red', fontSize: 12 }}>{showMessage1 && 'Your count has completed!'}</Text>
-          </View>
-          </>
-          : <View><Text></Text></View>}
+              <View>
+                <Text style={{ color: 'red', fontSize: 12 }}>{showMessage1 && 'Your count has completed!'}</Text>
+              </View>
+            </>
+            : <View><Text></Text></View>}
 
 
-           {/* count2 functionality */}
-         {pageData &&  parseFloat(pageData.count2)  ? 
-         <>
-         <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
+          {/* count2 functionality */}
+          {pageData && parseFloat(pageData.count2) ?
+            <>
+              <View style={{ marginTop: 4, flexDirection: 'row', alignItems: 'center' }} >
 
-            <TouchableOpacity
-              style={styles.submitButton}
-              onPress={() => { decrementCounter2() }}
-            >
-              <Text style={styles.submitButtonText}> Count2 </Text>
-            </TouchableOpacity>
-            <Text>{count2}</Text>
+                <TouchableOpacity
+                  style={styles.submitButton}
+                  onPress={() => { decrementCounter2() }}
+                >
+                  <Text style={styles.submitButtonText}> Count2 </Text>
+                </TouchableOpacity>
+                <Text>{count2}</Text>
 
-          </View> 
+              </View>
 
-          <View>
-            <Text style={{ color: 'red', fontSize: 12 }}>{showMessage2 && 'Your count has completed!'}</Text>
-          </View>
-          </>
-          : <View><Text></Text></View>}
+              <View>
+                <Text style={{ color: 'red', fontSize: 12 }}>{showMessage2 && 'Your count has completed!'}</Text>
+              </View>
+            </>
+            : <View><Text></Text></View>}
 
-          <AudioPage audioList={audio} />
+
         </View>
       </ScrollView>
     </SafeAreaView>

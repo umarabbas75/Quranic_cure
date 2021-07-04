@@ -59,7 +59,6 @@ function firstScreenStack({ navigation }) {
           },
         }}
       />
-      <Stack.Screen name="Details" component={DetailsScreen} />
     </Stack.Navigator>
   );
 }
@@ -140,6 +139,7 @@ function App() {
   return (
     <>
       <NavigationContainer>
+        
         <Drawer.Navigator
           drawerContentOptions={{
             activeTintColor: '#7a52f4',

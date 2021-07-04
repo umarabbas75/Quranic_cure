@@ -67,22 +67,22 @@ const AddDua = () => {
 
 
 
-
+  console.log('==============maxvalues,', maxValue, maxValue1, maxValue2)
   useFocusEffect(
     useCallback(() => {
       db.transaction((tx) => {
         tx.executeSql(
-  
+
           'SELECT category_name,category_id FROM table_category',
           [],
           (tx, results) => {
             var len = results.rows.length;
-  
+
             var rows = []
             for (var i = 0; i < len; i++) {
               var row = results.rows.item(i);
               rows.push(row)
-  
+
             }
             rows.forEach((item) => {
               item.label = item.category_name
@@ -118,23 +118,23 @@ const AddDua = () => {
   );
 
 
-  const onSurahChange = (item,name) => {
-    if(name === 'surah1'){
+  const onSurahChange = (item, name) => {
+    if (name === 'surah1') {
       setSurahName1(item.label)
       setSelectedSurah1(item.id)
       setSurahAyats1(item.totalAyat)
     }
-    if(name === 'surah2'){
+    if (name === 'surah2') {
       setSurahName2(item.label)
       setSelectedSurah2(item.id)
       setSurahAyats2(item.totalAyat)
     }
-    else if (name === 'surah0'){
+    else if (name === 'surah0') {
       setSurahName(item.label)
       setSelectedSurah(item.id)
       setSurahAyats(item.totalAyat)
     }
-   
+
   }
 
   const saveDuaInDb = () => {
@@ -226,47 +226,47 @@ const AddDua = () => {
 
 
     //2nd ayats
-        let ourSurahArabic2 = []
-        QuranicArabic.forEach(item => {
-          if (item.surah_number === selectedSurah2) {
-            ourSurahArabic2.push(item)
-          }
-        })
-    
-        let ourAyatsArabic2 = []
-        ourSurahArabic2.forEach(item => {
-          if (item.verse_number >= minValue2 && item.verse_number <= maxValue2) {
-            ourAyatsArabic2.push(item)
-          }
-        })
-    
-        let ourSurahEnglish2 = []
-        QuranicEnglish.forEach(item => {
-          if (item.surah_number === selectedSurah2) {
-            ourSurahEnglish2.push(item)
-          }
-        })
-    
-        let ourAyatsEnglish2 = []
-        ourSurahEnglish2.forEach(item => {
-          if (item.verse_number >= minValue2 && item.verse_number <= maxValue2) {
-            ourAyatsEnglish2.push(item)
-          }
-        })
-    
-        let ourSurahUrdu2 = []
-        QuranicUrdu.forEach(item => {
-          if (item.surah == selectedSurah2) {
-            ourSurahUrdu2.push(item)
-          }
-        })
-    
-        let ourAyatsUrdu2 = []
-        ourSurahUrdu2.forEach(item => {
-          if (parseInt(item.aya) >= parseInt(minValue2) && parseInt(item.aya) <= parseInt(maxValue2)) {
-            ourAyatsUrdu2.push(item)
-          }
-        })
+    let ourSurahArabic2 = []
+    QuranicArabic.forEach(item => {
+      if (item.surah_number === selectedSurah2) {
+        ourSurahArabic2.push(item)
+      }
+    })
+
+    let ourAyatsArabic2 = []
+    ourSurahArabic2.forEach(item => {
+      if (item.verse_number >= minValue2 && item.verse_number <= maxValue2) {
+        ourAyatsArabic2.push(item)
+      }
+    })
+
+    let ourSurahEnglish2 = []
+    QuranicEnglish.forEach(item => {
+      if (item.surah_number === selectedSurah2) {
+        ourSurahEnglish2.push(item)
+      }
+    })
+
+    let ourAyatsEnglish2 = []
+    ourSurahEnglish2.forEach(item => {
+      if (item.verse_number >= minValue2 && item.verse_number <= maxValue2) {
+        ourAyatsEnglish2.push(item)
+      }
+    })
+
+    let ourSurahUrdu2 = []
+    QuranicUrdu.forEach(item => {
+      if (item.surah == selectedSurah2) {
+        ourSurahUrdu2.push(item)
+      }
+    })
+
+    let ourAyatsUrdu2 = []
+    ourSurahUrdu2.forEach(item => {
+      if (parseInt(item.aya) >= parseInt(minValue2) && parseInt(item.aya) <= parseInt(maxValue2)) {
+        ourAyatsUrdu2.push(item)
+      }
+    })
 
 
     ourAyatsArabic = JSON.stringify(ourAyatsArabic)
@@ -317,7 +317,7 @@ const AddDua = () => {
       db.transaction(function (tx) {
         tx.executeSql(
           'INSERT INTO table_dua( category_id ,  disease, description,description1,description2,  surah ,surah1,surah2, minValue ,minValue1,minValue2, maxValue,maxValue1,maxValue2 , count, count1,count2, ayatsArabic ,ayatsArabic1,ayatsArabic2, ayatsEnglish ,ayatsEnglish1,ayatsEnglish2, ayatsUrdu ,ayatsUrdu1,ayatsUrdu2) VALUES  (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-          [categoryId, disease, description,description1,description2, selectedSurah,selectedSurah1,selectedSurah2, minValue,minValue1,minValue2,  maxValue,maxValue1,maxValue2 , count, count1,count2, ourAyatsArabic,ourAyatsArabic1,ourAyatsArabic2, ourAyatsEnglish,ourAyatsEnglish1,ourAyatsEnglish2, ourAyatsUrdu,ourAyatsUrdu1,ourAyatsUrdu2],
+          [categoryId, disease, description, description1, description2, selectedSurah, selectedSurah1, selectedSurah2, minValue, minValue1, minValue2, maxValue, maxValue1, maxValue2, count, count1, count2, ourAyatsArabic, ourAyatsArabic1, ourAyatsArabic2, ourAyatsEnglish, ourAyatsEnglish1, ourAyatsEnglish2, ourAyatsUrdu, ourAyatsUrdu1, ourAyatsUrdu2],
           (tx, results) => {
 
             if (results.rowsAffected > 0) {
@@ -325,7 +325,7 @@ const AddDua = () => {
                 text1: 'Success',
                 text2: 'Dua has been addedd successfully! 👋'
               });
-              
+
               setDisease(null)
               setCategories(null)
               setCount(0)
@@ -402,176 +402,176 @@ const AddDua = () => {
   }
 
   const validateAyatNumber = (value) => {
-
-    console.log('==========minValue========', minValue, value, surahAyats)
-    if (parseInt(value) > surahAyats && parseInt(value) > parseInt(minValue)) {
-      setMinError(true)
-      setErrorMessage('value cannot be greater then total ayats')
-      setMaxValue(value)
-    }
-    else if (parseInt(value) < surahAyats && parseInt(value) > parseInt(minValue)) {
-      console.log('==========here========', minValue, value)
-      setMaxValue(value)
-      setMinError(false)
-      setErrorMessage('')
-    }
-    else if (parseInt(value) < surahAyats && parseInt(value) < parseInt(minValue)) {
-      setMaxValue(value)
-      setMinError(true)
-      setErrorMessage('value cannot be less then min value')
-    }
+    setMaxValue(parseInt(value))
+    // console.log('==========minValue========', minValue, value, surahAyats)
+    // if (parseInt(value) > surahAyats && parseInt(value) > parseInt(minValue)) {
+    //   setMinError(true)
+    //   setErrorMessage('value cannot be greater then total ayats')
+    //   setMaxValue(parseInt(value))
+    // }
+    // else if (parseInt(value) < surahAyats && parseInt(value) > parseInt(minValue)) {
+    //   console.log('==========here========', minValue, value)
+    //   setMaxValue(parseInt(value))
+    //   setMinError(false)
+    //   setErrorMessage('')
+    // }
+    // else if (parseInt(value) < surahAyats && parseInt(value) < parseInt(minValue)) {
+    //   setMaxValue(parseInt(value))
+    //   setMinError(true)
+    //   setErrorMessage('value cannot be less then min value')
+    // }
 
 
   }
 
   const validateMinAyat = (value) => {
+    setMinValue(parseInt(value))
+    // console.log('==========maxValue========', maxValue, value, surahAyats)
+    // if (maxValue) {
+    //   if (parseInt(value) > parseInt(maxValue) && parseInt(value) < surahAyats) {
+    //     setMinError(true)
+    //     setErrorMessage('value cannot be greater then max value')
+    //     setMinValue(parseInt(value))
+    //   }
+    //   else if (parseInt(value) > parseInt(maxValue) && parseInt(value) > surahAyats) {
+    //     setMinError(true)
+    //     setErrorMessage('value cannot be greater then max total ayats')
+    //     setMinValue(parseInt(value))
+    //   }
+    //   else if (parseInt(value) < surahAyats && parseInt(value) < parseInt(maxValue)) {
+    //     setMinValue(parseInt(value))
+    //     setMinError(false)
+    //     setErrorMessage('')
+    //   }
+    // }
+    // else {
+    //   if (parseInt(value) > surahAyats) {
+    //     setMinValue(parseInt(value))
+    //     setMinError(true)
+    //     setErrorMessage('value cannot be greater then max total ayats')
+    //   }
+    //   else {
+    //     setMinValue(parseInt(value))
+    //     setMinError(false)
+    //     setErrorMessage('')
+    //   }
 
-    console.log('==========maxValue========', maxValue, value, surahAyats)
-    if (maxValue) {
-      if (parseInt(value) > parseInt(maxValue) && parseInt(value) < surahAyats) {
-        setMinError(true)
-        setErrorMessage('value cannot be greater then max value')
-        setMinValue(value)
-      }
-      else if (parseInt(value) > parseInt(maxValue) && parseInt(value) > surahAyats) {
-        setMinError(true)
-        setErrorMessage('value cannot be greater then max total ayats')
-        setMinValue(value)
-      }
-      else if (parseInt(value) < surahAyats && parseInt(value) < parseInt(maxValue)) {
-        setMinValue(value)
-        setMinError(false)
-        setErrorMessage('')
-      }
-    }
-    else {
-      if (parseInt(value) > surahAyats) {
-        setMinValue(value)
-        setMinError(true)
-        setErrorMessage('value cannot be greater then max total ayats')
-      }
-      else {
-        setMinValue(value)
-        setMinError(false)
-        setErrorMessage('')
-      }
-
-    }
+    // }
 
   }
   const validateAyatNumber1 = (value) => {
+    setMaxValue1(value)
 
-    
-    if (parseInt(value) > surahAyats1 && parseInt(value) > parseInt(minValue1)) {
-      setMinError1(true)
-      setErrorMessage1('value cannot be greater then total ayats')
-      setMaxValue1(value)
-    }
-    else if (parseInt(value) < surahAyats1 && parseInt(value) > parseInt(minValue1)) {
-      setMaxValue1(value)
-      setMinError1(false)
-      setErrorMessage1('')
-    }
-    else if (parseInt(value) < surahAyats1 && parseInt(value) < parseInt(minValue1)) {
-      setMaxValue1(value)
-      setMinError1(true)
-      setErrorMessage1('value cannot be less then min value')
-    }
+    // if (parseInt(value) > surahAyats1 && parseInt(value) > parseInt(minValue1)) {
+    //   setMinError1(true)
+    //   setErrorMessage1('value cannot be greater then total ayats')
+    //   setMaxValue1(value)
+    // }
+    // else if (parseInt(value) < surahAyats1 && parseInt(value) > parseInt(minValue1)) {
+    //   setMaxValue1(value)
+    //   setMinError1(false)
+    //   setErrorMessage1('')
+    // }
+    // else if (parseInt(value) < surahAyats1 && parseInt(value) < parseInt(minValue1)) {
+    //   setMaxValue1(value)
+    //   setMinError1(true)
+    //   setErrorMessage1('value cannot be less then min value')
+    // }
 
 
   }
 
   const validateMinAyat1 = (value) => {
+    setMinValue1(value)
 
-  
-    if (maxValue1) {
-      if (parseInt(value) > parseInt(maxValue1) && parseInt(value) < surahAyats1) {
-        setMinError1(true)
-        setErrorMessage1('value cannot be greater then max value')
-        setMinValue1(value)
-      }
-      else if (parseInt(value) > parseInt(maxValue1) && parseInt(value) > surahAyats1) {
-        setMinError1(true)
-        setErrorMessage1('value cannot be greater then max total ayats')
-        setMinValue1(value)
-      }
-      else if (parseInt(value) < surahAyats1 && parseInt(value) < parseInt(maxValue1)) {
-        setMinValue1(value)
-        setMinError1(false)
-        setErrorMessage1('')
-      }
-    }
-    else {
-      if (parseInt(value) > surahAyats1) {
-        setMinValue1(value)
-        setMinError1(true)
-        setErrorMessage1('value cannot be greater then max total ayats')
-      }
-      else {
-        setMinValue1(value)
-        setMinError1(false)
-        setErrorMessage1('')
-      }
+    // if (maxValue1) {
+    //   if (parseInt(value) > parseInt(maxValue1) && parseInt(value) < surahAyats1) {
+    //     setMinError1(true)
+    //     setErrorMessage1('value cannot be greater then max value')
+    //     setMinValue1(value)
+    //   }
+    //   else if (parseInt(value) > parseInt(maxValue1) && parseInt(value) > surahAyats1) {
+    //     setMinError1(true)
+    //     setErrorMessage1('value cannot be greater then max total ayats')
+    //     setMinValue1(value)
+    //   }
+    //   else if (parseInt(value) < surahAyats1 && parseInt(value) < parseInt(maxValue1)) {
+    //     setMinValue1(value)
+    //     setMinError1(false)
+    //     setErrorMessage1('')
+    //   }
+    // }
+    // else {
+    //   if (parseInt(value) > surahAyats1) {
+    //     setMinValue1(value)
+    //     setMinError1(true)
+    //     setErrorMessage1('value cannot be greater then max total ayats')
+    //   }
+    //   else {
+    //     setMinValue1(value)
+    //     setMinError1(false)
+    //     setErrorMessage1('')
+    //   }
 
-    }
+    // }
 
   }
 
   const validateAyatNumber2 = (value) => {
+    setMaxValue2(value)
 
-    
-    if (parseInt(value) > surahAyats2 && parseInt(value) > parseInt(minValue2)) {
-      setMinError2(true)
-      setErrorMessage2('value cannot be greater then total ayats')
-      setMaxValue2(value)
-    }
-    else if (parseInt(value) < surahAyats2 && parseInt(value) > parseInt(minValue2)) {
-      setMaxValue2(value)
-      setMinError2(false)
-      setErrorMessage2('')
-    }
-    else if (parseInt(value) < surahAyats2 && parseInt(value) < parseInt(minValue2)) {
-      setMaxValue2(value)
-      setMinError2(true)
-      setErrorMessage2('value cannot be less then min value')
-    }
+    // if (parseInt(value) > surahAyats2 && parseInt(value) > parseInt(minValue2)) {
+    //   setMinError2(true)
+    //   setErrorMessage2('value cannot be greater then total ayats')
+    //   setMaxValue2(value)
+    // }
+    // else if (parseInt(value) < surahAyats2 && parseInt(value) > parseInt(minValue2)) {
+    //   setMaxValue2(value)
+    //   setMinError2(false)
+    //   setErrorMessage2('')
+    // }
+    // else if (parseInt(value) < surahAyats2 && parseInt(value) < parseInt(minValue2)) {
+    //   setMaxValue2(value)
+    //   setMinError2(true)
+    //   setErrorMessage2('value cannot be less then min value')
+    // }
 
 
   }
 
   const validateMinAyat2 = (value) => {
+    setMinValue2(value)
 
-  
-    if (maxValue2) {
-      if (parseInt(value) > parseInt(maxValue2) && parseInt(value) < surahAyats2) {
-        setMinError2(true)
-        setErrorMessage2('value cannot be greater then max value')
-        setMinValue2(value)
-      }
-      else if (parseInt(value) > parseInt(maxValue2) && parseInt(value) > surahAyats2) {
-        setMinError2(true)
-        setErrorMessage2('value cannot be greater then max total ayats')
-        setMinValue2(value)
-      }
-      else if (parseInt(value) < surahAyats2 && parseInt(value) < parseInt(maxValue2)) {
-        setMinValue2(value)
-        setMinError2(false)
-        setErrorMessage2('')
-      }
-    }
-    else {
-      if (parseInt(value) > surahAyats2) {
-        setMinValue2(value)
-        setMinError2(true)
-        setErrorMessage2('value cannot be greater then max total ayats')
-      }
-      else {
-        setMinValue2(value)
-        setMinError2(false)
-        setErrorMessage2('')
-      }
+    // if (maxValue2) {
+    //   if (parseInt(value) > parseInt(maxValue2) && parseInt(value) < surahAyats2) {
+    //     setMinError2(true)
+    //     setErrorMessage2('value cannot be greater then max value')
+    //     setMinValue2(value)
+    //   }
+    //   else if (parseInt(value) > parseInt(maxValue2) && parseInt(value) > surahAyats2) {
+    //     setMinError2(true)
+    //     setErrorMessage2('value cannot be greater then max total ayats')
+    //     setMinValue2(value)
+    //   }
+    //   else if (parseInt(value) < surahAyats2 && parseInt(value) < parseInt(maxValue2)) {
+    //     setMinValue2(value)
+    //     setMinError2(false)
+    //     setErrorMessage2('')
+    //   }
+    // }
+    // else {
+    //   if (parseInt(value) > surahAyats2) {
+    //     setMinValue2(value)
+    //     setMinError2(true)
+    //     setErrorMessage2('value cannot be greater then max total ayats')
+    //   }
+    //   else {
+    //     setMinValue2(value)
+    //     setMinError2(false)
+    //     setErrorMessage2('')
+    //   }
 
-    }
+    // }
 
   }
 
@@ -595,6 +595,7 @@ const AddDua = () => {
                 <View>
                   <View style={styles.RNPickerContainer}>
                     <RNPickerSelect
+                      style={{ inputAndroid: { color: 'black', width: 200, } }}
                       value={category}
                       onValueChange={(value) => categoryFn(value)}
                       items={allCategories}
@@ -611,7 +612,7 @@ const AddDua = () => {
                   Disease
                 </Text>
                 <View>
-                  <View style={styles.RNPickerContainer}>
+                  {/* <View style={styles.RNPickerContainer}>
                     <RNPickerSelect
                       style={{ inputAndroid: { color: 'black', width: 200, } }}
                       value={disease}
@@ -620,7 +621,18 @@ const AddDua = () => {
                         setDisease(value)
                       }}
                       items={diseases[selectedDisease] || { label: '', value: '' }}
-                    /></View>
+                    /></View> */}
+
+                  <TextInput
+                    style={styles.input}
+                    underlineColorAndroid="transparent"
+                    autoCapitalize="none"
+                    value={disease}
+                    onChangeText={(item) => {
+                      setDiseaseError(false)
+                      setDisease(item)
+                    }}
+                  />
                   {diseaseError && <Text style={styles.error}>Please select disease!</Text>}
                 </View>
               </View>
@@ -655,10 +667,14 @@ const AddDua = () => {
                   <SearchComponent
                     data={surah}
                     label={'label'}
-                    style={{ borderColor: '#7a42f4', width: 200, }}
+                    style={{
+                      borderColor: '#7a42f4', width: 200, borderColor: '#7a42f4',
+
+                      borderRadius: 5,
+                    }}
                     onItemSelect={(text) => {
                       setSurahError(false)
-                      onSurahChange(text,'surah0')
+                      onSurahChange(text, 'surah0')
                     }}
                   />
                   {surahError && <Text style={styles.error}>Please select surah!</Text>}
@@ -670,12 +686,13 @@ const AddDua = () => {
               <View>
                 <View style={[styles.label]}>
                   <Text
-                    style={styles.labelText}>
+                    style={styles.labelText, { marginTop: 10, fontSize: 17 }}>
                     Ayats
                   </Text>
-                  <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                  <View style={{ flexDirection: 'row', paddingTop: 20 }}>
                     <View>
                       <TextInput
+                        value={minValue}
                         keyboardType="numeric"
                         style={[styles.number, { marginRight: 10 }]}
                         onChangeText={(value) => { validateMinAyat(value) }}
@@ -686,6 +703,7 @@ const AddDua = () => {
                     </View>
                     <View>
                       <TextInput
+                        value={maxValue}
                         keyboardType="numeric"
                         style={styles.number}
                         onChangeText={(value) => { validateAyatNumber(value) }}
@@ -703,14 +721,14 @@ const AddDua = () => {
 
                 </View>
                 <View style={{ marginLeft: 160, marginTop: 10 }}>
-                  {minError && <Text style={styles.error}>{errorMessage}</Text>}
+                  {/* {minError && <Text style={styles.error}>{errorMessage}</Text>} */}
 
                 </View>
               </View>
 
 
               {/* count input field */}
-              <View style={[styles.label, { marginTop: 25 }]}>
+              <View style={[styles.label, { marginTop: 15 }]}>
                 <Text
                   style={styles.count}>
                   Count
@@ -745,17 +763,17 @@ const AddDua = () => {
                   </View>
 
 
-                   {/* surah 1 input field */}
+                  {/* surah 1 input field */}
                   <View style={styles.label2}>
                     <Text
-                      style={styles.label2Text}>
+                      style={styles.label2Text, { paddingTop: 5, fontSize: 17 }}>
                       Surah 2
                     </Text>
                     <View>
                       <SearchComponent
                         data={surah}
                         label={'label'}
-                        style={{ borderColor: '#7a42f4', width: 200, }}
+                        style={{ borderColor: '#7a42f4', width: 200, borderRadius: 5 }}
                         onItemSelect={(text) => {
                           setSurahError1(false)
                           onSurahChange(text, 'surah1')
@@ -764,19 +782,19 @@ const AddDua = () => {
                       {surahError1 && <Text style={styles.error}>Please select surah!</Text>}
                     </View>
                   </View>
-                  
+
                   {/* ayat 1 input field */}
                   <View>
                     <View style={styles.label}>
                       <Text
-                        style={styles.label2Text}>
+                        style={styles.label2Text, { paddingTop: 12, fontSize: 17 }}>
                         Ayats 2
                       </Text>
-                      <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                      <View style={{ flexDirection: 'row', marginTop: 20 }}>
                         <View>
                           <TextInput
                             keyboardType="numeric"
-                            style={styles.number}
+                            style={[styles.number, { marginRight: 10 }]}
                             onChangeText={(value) => { validateMinAyat1(value) }}
                             placeholder="from"
                             placeholderTextColor="gray"
@@ -804,7 +822,7 @@ const AddDua = () => {
 
 
                   {/* desc 1 input field */}
-                  <View style={styles.label2}>
+                  {/* <View style={styles.label2}>
                     <Text
                       style={styles.label2Text}>
                       Description 2
@@ -822,11 +840,11 @@ const AddDua = () => {
                       />
                       {descriptionError1 && <Text style={styles.error}>Please enter description!</Text>}
                     </View>
-                  </View>
+                  </View> */}
 
 
-                   {/* count 1 input field */}
-                  <View style={styles.label2}>
+                  {/* count 1 input field */}
+                  {/* <View style={styles.label2}>
                     <Text
                       style={styles.label2Text}>
                       Count 2
@@ -847,7 +865,7 @@ const AddDua = () => {
                       />
                       {countError1 && <Text style={styles.error}>Please enter count!</Text>}
                     </View>
-                  </View>
+                  </View> */}
                 </>
               }
 
@@ -862,17 +880,17 @@ const AddDua = () => {
                   </View>
 
 
-                   {/* surah 2 input field */}
+                  {/* surah 2 input field */}
                   <View style={styles.label2}>
                     <Text
-                      style={styles.label2Text}>
+                      style={styles.label2Text, { paddingTop: 5, fontSize: 17 }}>
                       Surah 3
                     </Text>
                     <View>
                       <SearchComponent
                         data={surah}
                         label={'label'}
-                        style={{ borderColor: '#7a42f4', width: 200, }}
+                        style={{ borderColor: '#7a42f4', width: 200, borderRadius: 5 }}
                         onItemSelect={(text) => {
                           setSurahError2(false)
                           onSurahChange(text, 'surah2')
@@ -881,19 +899,19 @@ const AddDua = () => {
                       {surahError2 && <Text style={styles.error}>Please select surah!</Text>}
                     </View>
                   </View>
-                  
+
                   {/* ayat 2 input field */}
                   <View>
                     <View style={styles.label}>
                       <Text
-                        style={styles.label2Text}>
+                        style={styles.label2Text, { paddingTop: 12, fontSize: 17 }}>
                         Ayats 3
                       </Text>
-                      <View style={{ flexDirection: 'row', marginTop: 40 }}>
+                      <View style={{ flexDirection: 'row', marginTop: 20 }}>
                         <View>
                           <TextInput
                             keyboardType="numeric"
-                            style={styles.number}
+                            style={[styles.number, { marginRight: 10 }]}
                             onChangeText={(value) => { validateMinAyat2(value) }}
                             placeholder="from"
                             placeholderTextColor="gray"
@@ -921,7 +939,7 @@ const AddDua = () => {
 
 
                   {/* desc 2 input field */}
-                  <View style={styles.label2}>
+                  {/* <View style={styles.label2}>
                     <Text
                       style={styles.label2Text}>
                       Description 3
@@ -939,11 +957,11 @@ const AddDua = () => {
                       />
                       {descriptionError2 && <Text style={styles.error}>Please enter description!</Text>}
                     </View>
-                  </View>
+                  </View> */}
 
 
-                   {/* count 2 input field */}
-                  <View style={styles.label2}>
+                  {/* count 2 input field */}
+                  {/* <View style={styles.label2}>
                     <Text
                       style={styles.label2Text}>
                       Count 3
@@ -964,7 +982,7 @@ const AddDua = () => {
                       />
                       {countError2 && <Text style={styles.error}>Please enter count!</Text>}
                     </View>
-                  </View>
+                  </View> */}
                 </>
               }
 
@@ -1038,15 +1056,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     alignSelf: 'flex-start',
     marginRight: 20,
-    marginTop: 10
+    paddingTop: 10
   },
   RNPickerContainer: {
     borderWidth: 1,
     height: 45,
-    borderColor: '#7a42f4',
     width: 200,
+    borderColor: '#7a42f4',
     borderRadius: 5,
-    marginBottom: 10
+    paddingBottom: 10
   },
   number: {
     height: 45,
@@ -1073,7 +1091,7 @@ const styles = StyleSheet.create({
     marginRight: 30,
     marginTop: 5
   },
-  moreDua : {
+  moreDua: {
     alignSelf: 'flex-end', marginTop: 10, justifyContent: 'center',
     color: '#7a42f4', alignItems: 'center', height: 28, textDecorationLine: 'underline',
     padding: 4,
