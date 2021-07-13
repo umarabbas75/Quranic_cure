@@ -14,7 +14,7 @@ import Toast from 'react-native-toast-message';
 import RNPickerSelect from 'react-native-picker-select';
 import SearchComponent from '../SearchComponent'
 import { useFocusEffect } from '@react-navigation/core';
-var db = openDatabase({ name: 'QURANICCUREAPP1.db' });
+var db = openDatabase({ name: 'QURANICCUREAPP123.db' });
 
 const AddDua = () => {
 

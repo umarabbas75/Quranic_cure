@@ -10,7 +10,7 @@ import {
 } from 'react-native-image-picker';
 import Toast from 'react-native-toast-message';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'QURANICCUREAPP1.db' });
+var db = openDatabase({ name: 'QURANICCUREAPP123.db' });
 
 const FirstPage = ({ navigation }) => {
 
@@ -24,6 +24,7 @@ const FirstPage = ({ navigation }) => {
 
   useEffect(() => {
     setPathForDb('')
+    // create category table
     db.transaction(function (txn) {
       txn.executeSql(
         "SELECT * FROM sqlite_master WHERE type='table' AND name='table_category'",
@@ -49,6 +50,28 @@ const FirstPage = ({ navigation }) => {
         }
       );
     });
+
+    // create favorites table
+    db.transaction(function (txn) {
+      txn.executeSql(
+        "SELECT * FROM sqlite_master WHERE type='table' AND name='table_favorite'",
+        [],
+        function (tx, res) {
+
+          if (res.rows.length == 0) {
+           
+
+            txn.executeSql('DROP TABLE IF EXISTS table_favorite', []);
+            txn.executeSql(
+              'CREATE TABLE IF NOT EXISTS table_favorite(favorite_id INTEGER PRIMARY KEY AUTOINCREMENT, dua_id INTEGER, category_name VARCHAR(200), disease_name  VARCHAR(200))',
+              []
+            );
+          }
+        }
+      );
+    });
+
+
   }, []);
   useFocusEffect(
     useCallback(() => {

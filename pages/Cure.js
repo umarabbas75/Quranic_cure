@@ -6,7 +6,7 @@ import {
   Button, View, Text, SafeAreaView, StyleSheet, TouchableOpacity, ScrollView, Image, Alert
 } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'QURANICCUREAPP1.db' });
+var db = openDatabase({ name: 'QURANICCUREAPP123.db' });
 
 const FirstPage = ({ navigation }) => {
   let [userData, setUserData] = useState({});
@@ -27,6 +27,7 @@ const FirstPage = ({ navigation }) => {
               rows.push(row)
 
             }
+            
             setAllCategories(rows)
 
             if (len > 0) {
@@ -57,7 +58,8 @@ const FirstPage = ({ navigation }) => {
             style={styles.submitButton}
             onPress={() => {
               navigation.navigate('Details', {
-                cat_id: element.category_id
+                cat_id: element.category_id,
+                cat_name : element.category_name
               })
             }}
           >

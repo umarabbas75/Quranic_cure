@@ -13,6 +13,9 @@ import Cure from './pages/Cure';
 import DetailsScreen from './pages/DetailsScreen';
 import Toast from 'react-native-toast-message';
 
+import Favorite from './pages/Favorite'
+import FavoriteDetail from './pages/FavoritesDetails'
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -128,6 +131,48 @@ function ThirdScreenStack({ navigation }) {
     </Stack.Navigator>
   );
 }
+function FavoriteScreenStack({ navigation }) {
+  return (
+    <Stack.Navigator initialRouteName="favorites">
+      <Stack.Screen
+        name="favorites"
+        component={Favorite}
+        options={{
+          title: 'Favorite', //Set Header Title
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#7a52f4', //Set Header color
+          },
+          headerTintColor: '#fff', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+      />
+      <Stack.Screen
+        name="favoritesDetail"
+        component={FavoriteDetail}
+        options={{
+          title: 'Favorite Details', //Set Header Title
+          headerLeft: () => (
+            <NavigationDrawerStructure navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#7a52f4', //Set Header color
+          },
+          headerTintColor: '#fff', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+      />
+     
+
+    </Stack.Navigator>
+  );
+}
 
 
 
@@ -162,6 +207,11 @@ function App() {
             name="Cure"
             options={{ drawerLabel: 'Cure' }}
             component={ThirdScreenStack}
+          />
+          <Drawer.Screen
+            name="Favorites"
+            options={{ drawerLabel: 'Favorites' }}
+            component={FavoriteScreenStack}
           />
 
         </Drawer.Navigator>

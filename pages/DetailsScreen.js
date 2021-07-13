@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react'
 import {
   View, Text, SafeAreaView, StyleSheet, TouchableOpacity,
   ScrollView,
-
+  Image
 } from 'react-native';
 import { openDatabase } from 'react-native-sqlite-storage';
 import Sound from 'react-native-sound';
 import { useFocusEffect } from '@react-navigation/native';
 import AudioPage from './AudioPage'
 import RNPickerSelect from 'react-native-picker-select';
+import Toast from 'react-native-toast-message';
 
-var db = openDatabase({ name: 'QURANICCUREAPP1.db' });
+
+var db = openDatabase({ name: 'QURANICCUREAPP123.db' });
 let sound = ''
 
 const DetailsScreen = ({ navigation, route }) => {
@@ -23,13 +25,15 @@ const DetailsScreen = ({ navigation, route }) => {
   const [audioCount, setAudiCount] = useState(0)
   const [showMessage, setShowMessage] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  const { cat_id } = route.params
+  const { cat_id, cat_name } = route.params
   const [audio, setAudio] = useState([])
   const [showNextDua, setShowNextDua] = useState(false)
   const [ids, setIds] = useState([])
+  const [allFavorites, setAllFavorites] = useState([])
+  const [isFavorite, setIsFavorite] = useState(false)
 
 
- 
+  console.log('==========allFavorites======',allFavorites)
   // [{ index: 1, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001001.mp3' }, { id: 2, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001002.mp3' }, { id: 3, label: 'http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/001003.mp3' }]
   const playAgain = () => {
     if (audioCount !== 0) {
@@ -42,6 +46,8 @@ const DetailsScreen = ({ navigation, route }) => {
 
   const fetchDiseasesOnPageLoad = () => {
 
+
+    //  fetch data to populate disease dropdown
     db.transaction((tx) => {
       tx.executeSql(
 
@@ -57,6 +63,15 @@ const DetailsScreen = ({ navigation, route }) => {
             rows.push(row)
             newRow.push(row)
           }
+
+
+          // rows.forEach(item => {
+          //   item.label = item.disease
+          //   item.value = item.dua_id
+          // })
+
+          // setMyDiseases(rows)
+
           setSelectedDiseases(rows)
 
           let onlyDisease = rows.map(item => item.disease);
@@ -114,7 +129,7 @@ const DetailsScreen = ({ navigation, route }) => {
             })
           })
 
-          console.log('=========superFinal=======',superFinal)
+      
 
           let grandSuperFinal = []
 
@@ -150,7 +165,7 @@ const DetailsScreen = ({ navigation, route }) => {
             final.push(item)
           })
 
-          console.log('=========grandSuperFinal=======',grandSuperFinal)
+          
 
           setMyDiseases(grandSuperFinal)
 
@@ -158,21 +173,49 @@ const DetailsScreen = ({ navigation, route }) => {
         }
       );
     });
+
+
+      //  fetch all favorites data to make heart red
+    db.transaction((tx) => {
+      tx.executeSql(
+
+        'SELECT * FROM table_favorite',
+        [],
+        (tx, results) => {
+          var len = results.rows.length;
+
+          var rows = []
+          for (var i = 0; i < len; i++) {
+            var row = results.rows.item(i);
+            rows.push(row)
+
+          }
+          
+          setAllFavorites(rows)
+        }
+      );
+    });
+
+
+    
+
+
+
   }
 
   useEffect(fetchDiseasesOnPageLoad, [cat_id])
 
 
-  const addLeadingZero = (num,size) =>{
-        let s = num+""
-        while(s.length < size){
-          s= '0'+s
-        }
-        return s
+  const addLeadingZero = (num, size) => {
+    let s = num + ""
+    while (s.length < size) {
+      s = '0' + s
+    }
+    return s
   }
 
   const fetchDataFromDb = (id) => {
- 
+    setIsFavorite(false)
     myDiseases && myDiseases.length > 0 && myDiseases.forEach(item => {
       if (item.value == id) {
         setIds(item.ids)
@@ -188,19 +231,31 @@ const DetailsScreen = ({ navigation, route }) => {
           var len = results.rows.length;
 
           const obj = results.rows.item(0)
-          console.log('========setPageDatasetPageDatasetPageDatasetPageData====================================================================',obj)
-          setCount(results.rows.item(0).count)
-          setPageData(obj)
          
+          setCount(obj.count)
+          setPageData(obj)
+
+          let duaId = obj && obj.dua_id
+
+         
+      
+          allFavorites && allFavorites.map(item=>{
+
+            if(item.dua_id === duaId){
+              console.log('========= they are equal ======',duaId,item.dua_id)
+              setIsFavorite(true)
+            }
+          })
+
           let arrayLength = obj.maxValue - obj.minValue
           let array = []
           let index = 1
           for (let i = parseInt(obj.minValue); i < parseInt(obj.maxValue) + 1; i++) {
-            
-            let surah = addLeadingZero(parseInt(obj.surah),3)
-            let ayat = addLeadingZero(i,3)
 
-        
+            let surah = addLeadingZero(parseInt(obj.surah), 3)
+            let ayat = addLeadingZero(i, 3)
+
+
             array.push({ label: `http://www.everyayah.com/data/AbdulSamad_64kbps_QuranExplorer.Com/${(surah)}${ayat}.mp3`, index: index, surah: parseInt(obj.surah), min: obj.minValue, max: obj.maxValue })
             index++
           }
@@ -216,6 +271,9 @@ const DetailsScreen = ({ navigation, route }) => {
         }
       );
     });
+
+
+
   }
 
   const diseaseList = () => {
@@ -340,7 +398,7 @@ const DetailsScreen = ({ navigation, route }) => {
 
   }
 
-  
+
 
   const startPlaying = () => {
 
@@ -376,6 +434,46 @@ const DetailsScreen = ({ navigation, route }) => {
     }
   }
 
+  const addThisDuaInFavorites = () => {
+    let shouldAdd = true
+    allFavorites && allFavorites.map(item=>{
+      if(item.dua_id === pageData.dua_id){
+        shouldAdd = false
+      }
+    })
+
+    if(shouldAdd){
+      if (pageData && pageData.dua_id) {
+        db.transaction(function (tx) {
+          tx.executeSql(
+            'INSERT INTO table_favorite(dua_id,category_name,disease_name) VALUES (?,?,?)',
+            [pageData.dua_id,cat_name,pageData.disease],
+            (tx, results) => {
+              console.log('Results', results);
+              if (results.rowsAffected > 0) {
+  
+                Toast.show({
+                  text1: 'Success',
+                  text2: 'Favorite has been addedd successfully! 👋'
+                });
+              } else alert('Favorites could not be added in db. try again!');
+            }
+          );
+        });
+      }
+    }
+    else{
+      Toast.show({
+        type : 'error',
+        text1: 'Error',
+        text2: 'This id has already been added to favorites! 👋'
+      });
+    }
+
+
+
+  }
+
 
 
   return (
@@ -391,19 +489,26 @@ const DetailsScreen = ({ navigation, route }) => {
             }}> Go Back</Text>
           </TouchableOpacity>
         </View>
-        <View style={{ borderWidth: 1, height: 50, borderColor: '#7a42f4', width: 250, borderRadius: 5, marginBottom: 10 }}>
-          <RNPickerSelect
-            style={{ inputAndroid: { color: 'black', width: 250, } }}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: 10 }}>
+          <View style={{ borderWidth: 1, height: 50, borderColor: '#7a42f4', width: 250, borderRadius: 5, marginBottom: 10, }}>
+            <RNPickerSelect
+              style={{ inputAndroid: { color: 'black', width: 250, } }}
+              placeholder={{
+                label: "Select The Disease"
+              }}
+              onValueChange={(value) => fetchDataFromDb(value)}
+              items={myDiseases}
+            />
 
-            placeholder={{
-              label: "Select The Disease"
-            }}
+          </View>
 
-            onValueChange={(value) => fetchDataFromDb(value)}
-            items={myDiseases}
-          />
+          <TouchableOpacity 
+          style={[styles.favBtn, {backgroundColor : isFavorite ? 'red' : 'white'}]}  
+          onPress={() => { addThisDuaInFavorites() }}>
+            {/* {renderFavoriteImage()} */}
+            <Text style={{color : isFavorite ? 'blue' : 'black'}} >Add to favorites</Text>
+          </TouchableOpacity>
         </View>
-
 
         <View style={{ display: 'flex', paddingHorizontal: 0 }}>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginBottom: 10, borderBottomColor: '#ddd', borderBottomWidth: 1 }}>
@@ -425,7 +530,7 @@ const DetailsScreen = ({ navigation, route }) => {
               </View> :
                 <View style={{ height: 300, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
 
-                  <Text style={{alignItems:'center'}}>Please Select Disease From Above</Text>
+                  <Text style={{ alignItems: 'center' }}>Please Select Disease From Above</Text>
                 </View>
               }
             </View>
@@ -474,7 +579,7 @@ const DetailsScreen = ({ navigation, route }) => {
               <Text style={styles.submitButtonText}> Count </Text>
             </TouchableOpacity>
             <Text>{count}</Text>
-            
+
           </View>
 
           <View>
@@ -511,6 +616,14 @@ const DetailsScreen = ({ navigation, route }) => {
 export default DetailsScreen
 
 const styles = StyleSheet.create({
+  favBtn : {
+      padding : 10,
+      borderRadius : 10,
+      height : 40,
+      borderWidth : 1,
+      borderColor : 'red',
+
+  },
   container: {
     paddingTop: 23
   },
